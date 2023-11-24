@@ -5,6 +5,7 @@
 
 class SegtreeNode {
   Matrix *matrix;
+
   SegtreeNode() { matrix = new Matrix(2, 2); }
 
   ~SegtreeNode() { delete matrix; }

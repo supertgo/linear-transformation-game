@@ -1,11 +1,11 @@
-#include "../include/segtree.h"
+#include "segtree.h"
 
 Segtree::Segtree(int size) {
   this->size = size;
   this->seg = new SegtreeNode[4 * size];
 }
 
-Segtree::~Segtree() { delete[] this->seg; }
+Segtree::~Segtree() {  }
 
 Matrix *Segtree::build(int p, int l, int r) {
   if (l == r)
@@ -34,6 +34,9 @@ Matrix *Segtree::update(int i, Matrix *matrix, int p, int l, int r) {
     return seg[p].matrix;
 
   if (l == r) {
+    delete seg[p].matrix;
+
+    matrix->hasChanged = true;
     return seg[p].matrix = matrix;
   }
 
