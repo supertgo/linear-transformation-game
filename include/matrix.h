@@ -4,8 +4,10 @@
 #include <iostream>
 #include <stdexcept>
 
+#define matrix_type long unsigned int
+
 typedef struct point_t {
-  long unsigned int x, y;
+  matrix_type x, y;
 } Point;
 
 class Matrix {
@@ -14,11 +16,11 @@ private:
   bool hasChanged;
 
 public:
-  int *data;
+  matrix_type *data;
   Matrix() : rows(2), cols(2) { Matrix(2, 2); }
 
   Matrix(int rows, int cols) {
-    this->data = new int[rows * cols];
+    this->data = new matrix_type[rows * cols];
     this->cols = cols;
     this->rows = rows;
     this->hasChanged = false;
@@ -37,15 +39,17 @@ public:
   Point linearTransformation(Point point) {
     Point result;
     result.x = ((*this)(0, 0) * point.x) + ((*this)(0, 1) * point.y);
-    result.y = ((*this)(1, 1) * point.x) + ((*this)(1, 1) * point.y);
+    result.y = ((*this)(1, 0) * point.x) + ((*this)(1, 1) * point.y);
     return result;
   }
 
   ~Matrix() { delete[] this->data; }
 
-  int &operator()(int i, int j) { return data[i * cols + j]; }
+  matrix_type &operator()(int i, int j) { return data[i * cols + j]; }
 
-  const int &operator()(int i, int j) const { return data[i * cols + j]; }
+  const matrix_type &operator()(int i, int j) const {
+    return data[i * cols + j];
+  }
 
   Matrix *operator*(Matrix *b) {
     if (this->cols != b->rows)
@@ -63,18 +67,26 @@ public:
     }
     return c;
   }
-  Matrix *matrix_mult(Matrix *a, Matrix *b) {
+
+  static Matrix *matrix_mult(Matrix *a, Matrix *b) {
     if (a->cols != b->rows)
       throw std::invalid_argument("Number of columns in first matrix must be "
                                   "equal to number of rows in second matrix");
 
     Matrix *c = new Matrix(a->rows, b->cols);
 
+    for (int i = 0; i < c->rows * c->cols; i++) {
+      c->data[i] = 0;
+    }
+
+    matrix_type delimiter = 1e8;
+
     for (int i = 0; i < a->rows; i++) {
       for (int j = 0; j < b->cols; j++) {
         for (int k = 0; k < a->cols; k++) {
           (*c)(i, j) += (*a)(i, k) * (*b)(k, j);
         }
+        (*c)(i, j) %= delimiter;
       }
     }
     return c;
