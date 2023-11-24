@@ -5,13 +5,10 @@
 
 class SegtreeNode {
   Matrix *matrix;
-  SegtreeNode() {
-    matrix = new Matrix(2, 2);
-  }
 
-  ~SegtreeNode() {
-    delete matrix;
-  }
+  SegtreeNode() { matrix = new Matrix(2, 2); }
+
+  ~SegtreeNode() { delete matrix; }
 
   friend class Segtree;
 };
@@ -24,7 +21,8 @@ public:
   Matrix *query(int a, int b, int p, int l, int r);
   Matrix *update(int i, int x, int p, int l, int r);
   Matrix *matrix_mult(Matrix *a, Matrix *b);
-  Matrix* update(int i, Matrix *m);
+  Matrix *update(int i, Matrix *matrix, int p, int l, int r);
+  void print();
 
 private:
   int size;
