@@ -10,7 +10,7 @@
 class Matrix {
 private:
   int rows, cols;
-  matrix_type *data;
+  matrix_type data[4];
 
 public:
   bool hasChanged;
@@ -20,10 +20,8 @@ public:
   Matrix(int rows, int cols);
   ~Matrix();
 
-  static Matrix *apply_delimiter(Matrix *m);
-
-  static Matrix *matrix_mult(Matrix *a, Matrix *b);
-  Matrix *mult(Matrix &b);
+  static Matrix matrix_mult(const Matrix &a, const Matrix &b);
+  void set_identity();
 
   Point linear_transformation(Point point);
 
@@ -32,9 +30,9 @@ public:
 
   Matrix &operator=(const Matrix &);
 
-  friend std::istream &operator>>(std::istream &is, Matrix *m);
+  friend std::istream &operator>>(std::istream &is, Matrix &m);
 
-  friend std::ostream &operator<<(std::ostream &os, const Matrix *m);
+  friend std::ostream &operator<<(std::ostream &os, const Matrix &m);
 };
 
 #endif // !MATRIX_H

@@ -1,7 +1,6 @@
-#include "matrix.h"
+#include "../include/matrix.h"
 
 Matrix::Matrix(int rows, int cols) {
-  this->data = new matrix_type[rows * cols];
   this->cols = cols;
   this->rows = rows;
   this->hasChanged = false;
@@ -17,44 +16,34 @@ Matrix::Matrix(int rows, int cols) {
   }
 }
 
-Matrix::~Matrix() { delete[] this->data; }
+Matrix::~Matrix() {}
 
-Matrix *Matrix::mult(Matrix &b) {
-  Matrix *c = new Matrix(this->rows, b.cols);
-
-  for (int i = 0; i < c->rows * c->cols; i++) {
-    c->data[i] = 0;
-  }
-
-  matrix_type delimiter = 1e8;
-
+void Matrix::set_identity() {
   for (int i = 0; i < this->rows; i++) {
-    for (int j = 0; j < b.cols; j++) {
-      for (int k = 0; k < this->cols; k++) {
-        (*c)(i, j) += (*this)(i, k) * (b)(k, j);
+    for (int j = 0; j < this->cols; j++) {
+      if (i == j) {
+        (*this)(i, j) = 1;
+      } else {
+        (*this)(i, j) = 0;
       }
-      (*c)(i, j) %= delimiter;
     }
   }
-
-  return c;
 }
+Matrix Matrix::matrix_mult(const Matrix &a, const Matrix &b) {
+  Matrix c;
 
-Matrix *Matrix::matrix_mult(Matrix *a, Matrix *b) {
-  Matrix *c = new Matrix(a->rows, b->cols);
-
-  for (int i = 0; i < c->rows * c->cols; i++) {
-    c->data[i] = 0;
+  for (int i = 0; i < c.rows * c.cols; i++) {
+    c.data[i] = 0;
   }
 
   matrix_type delimiter = 1e8;
 
-  for (int i = 0; i < a->rows; i++) {
-    for (int j = 0; j < b->cols; j++) {
-      for (int k = 0; k < a->cols; k++) {
-        (*c)(i, j) += (*a)(i, k) * (*b)(k, j);
+  for (int i = 0; i < a.rows; i++) {
+    for (int j = 0; j < b.cols; j++) {
+      for (int k = 0; k < a.cols; k++) {
+        c(i, j) += a(i, k) * b(k, j);
       }
-      (*c)(i, j) %= delimiter;
+      c(i, j) %= delimiter;
     }
   }
 
@@ -80,20 +69,20 @@ Matrix &Matrix::operator=(const Matrix &m) {
   return *this;
 }
 
-std::istream &operator>>(std::istream &is, Matrix *m) {
-  for (int i = 0; i < m->rows; ++i) {
-    for (int j = 0; j < m->cols; ++j) {
-      is >> (*m)(i, j);
+std::istream &operator>>(std::istream &is, Matrix &m) {
+  for (int i = 0; i < m.rows; ++i) {
+    for (int j = 0; j < m.cols; ++j) {
+      is >> m(i, j);
     }
   }
   return is;
 }
 
-std::ostream &operator<<(std::ostream &os, const Matrix *m) {
-  for (int i = 0; i < m->rows; ++i) {
-    os << (*m)(i, 0);
-    for (int j = 1; j < m->cols; ++j) {
-      os << " " << (*m)(i, j);
+std::ostream &operator<<(std::ostream &os, const Matrix &m) {
+  for (int i = 0; i < m.rows; ++i) {
+    os << m(i, 0);
+    for (int j = 1; j < m.cols; ++j) {
+      os << " " << m(i, j);
     }
     os << std::endl;
   }

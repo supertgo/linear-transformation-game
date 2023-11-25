@@ -5,14 +5,21 @@
 
 class SegtreeNode {
 private:
-  Matrix *matrix;
+  Matrix matrix;
 
 public:
-  SegtreeNode() { matrix = nullptr; }
+  SegtreeNode() = default;
 
-  ~SegtreeNode() { delete matrix; }
+  const Matrix &getMatrix() const { return matrix; }
 
-  friend class Segtree;
+  void setMatrix(const Matrix &newMatrix) { matrix = newMatrix; }
+
+  SegtreeNode &operator=(const SegtreeNode &other) {
+    if (this != &other) {
+      matrix = other.matrix;
+    }
+    return *this;
+  }
 };
 
 class Segtree {
@@ -20,15 +27,14 @@ public:
   Segtree(int size);
   ~Segtree();
 
-  Matrix *build(int p, int l, int r);
-  Matrix *query(int a, int b, int p, int l, int r);
-  Matrix *update(int i, int x, int p, int l, int r);
-  Matrix *update(int i, Matrix *matrix, int p, int l, int r);
+  Matrix build(int p, int l, int r);
+  Matrix query(int a, int b, int p, int l, int r);
+  Matrix update(int i, Matrix &matrix, int p, int l, int r);
 
 private:
   int size;
   SegtreeNode *seg;
-  Matrix *identity_matrix;
+  Matrix identity_matrix;
 };
 
 #endif // !SEGTREE_H
