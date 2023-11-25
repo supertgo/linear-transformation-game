@@ -3,9 +3,13 @@
 Segtree::Segtree(int size) {
   this->size = size;
   this->seg = new SegtreeNode[4 * size];
+  this->identity_matrix = new Matrix(2, 2);
 }
 
-Segtree::~Segtree() {  }
+Segtree::~Segtree() {
+  delete[] this->seg;
+  delete this->identity_matrix;
+}
 
 Matrix *Segtree::build(int p, int l, int r) {
   if (l == r)
@@ -18,7 +22,7 @@ Matrix *Segtree::build(int p, int l, int r) {
 
 Matrix *Segtree::query(int a, int b, int p, int l, int r) {
   if (b < l || r < a)
-    return new Matrix(2, 2);
+    return this->identity_matrix;
 
   if (a <= l && r <= b)
     return seg[p].matrix;
@@ -42,6 +46,9 @@ Matrix *Segtree::update(int i, Matrix *matrix, int p, int l, int r) {
 
   int m = (l + r) / 2;
 
+  delete seg[p].matrix;
+
+  matrix->hasChanged = true;
   return seg[p].matrix =
              Matrix::matrix_mult(update(i, matrix, 2 * p, l, m),
                                  update(i, matrix, 2 * p + 1, m + 1, r));

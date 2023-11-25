@@ -19,30 +19,7 @@ Matrix::Matrix(int rows, int cols) {
 
 Matrix::~Matrix() { delete[] this->data; }
 
-matrix_type &Matrix::operator()(int i, int j) { return data[i * cols + j]; }
-
-const matrix_type &Matrix::operator()(int i, int j) const {
-  return data[i * cols + j];
-}
-
-Matrix *Matrix::apply_delimiter(Matrix *m) {
-  matrix_type delimiter = 1e8;
-
-  for (int i = 0; i < m->rows * m->cols; i++) {
-    m->data[i] %= delimiter;
-  }
-
-  return m;
-}
-
 Matrix *Matrix::matrix_mult(Matrix *a, Matrix *b) {
-  if (!a->hasChanged && !b->hasChanged)
-    return apply_delimiter(a);
-  if (!a->hasChanged && b->hasChanged)
-    return apply_delimiter(b);
-  if (a->hasChanged && !b->hasChanged)
-    return apply_delimiter(a);
-
   Matrix *c = new Matrix(a->rows, b->cols);
 
   for (int i = 0; i < c->rows * c->cols; i++) {
@@ -59,12 +36,27 @@ Matrix *Matrix::matrix_mult(Matrix *a, Matrix *b) {
       (*c)(i, j) %= delimiter;
     }
   }
+
   return c;
 }
 
 Point Matrix::linear_transformation(Point point) {
   return {((*this)(0, 0) * point.x) + ((*this)(0, 1) * point.y),
           ((*this)(1, 0) * point.x) + ((*this)(1, 1) * point.y)};
+}
+
+matrix_type &Matrix::operator()(int i, int j) { return data[i * cols + j]; }
+
+const matrix_type &Matrix::operator()(int i, int j) const {
+  return data[i * cols + j];
+}
+
+Matrix &Matrix::operator=(const Matrix &m) {
+  for (int i = 0; i < this->rows * this->cols; i++) {
+    this->data[i] = m.data[i];
+  }
+
+  return *this;
 }
 
 std::istream &operator>>(std::istream &is, Matrix *m) {
