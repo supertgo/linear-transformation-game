@@ -15,10 +15,10 @@ run: $(EXE)
 	$(EXE)
 
 $(EXE): $(OBJS)
-	$(CC) -pg -o $(EXE) $(OBJS)
+	$(CC) -g -o $(EXE) $(OBJS) $(LIBS)
 
 $(OBJ)/%.o: $(SRC)/%.cpp $(HDRS)
 	$(CC) $(CFLAGS) -o $@ $<
 
 clean:
-	rm -f $(EXE) $(OBJ)/*.o gmon.out
+	rm -f $(EXE) $(OBJS) gmon.out

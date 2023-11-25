@@ -20,16 +20,17 @@ public:
   Matrix(int rows, int cols);
   ~Matrix();
 
-  static Matrix* apply_delimiter(Matrix* m);
+  static Matrix *apply_delimiter(Matrix *m);
 
   static Matrix *matrix_mult(Matrix *a, Matrix *b);
+  Matrix *mult(Matrix &b);
 
   Point linear_transformation(Point point);
-  
+
   matrix_type &operator()(int i, int j);
   const matrix_type &operator()(int i, int j) const;
 
-  Matrix& operator=(const Matrix&);
+  Matrix &operator=(const Matrix &);
 
   friend std::istream &operator>>(std::istream &is, Matrix *m);
 

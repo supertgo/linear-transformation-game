@@ -29,8 +29,10 @@ Matrix *Segtree::query(int a, int b, int p, int l, int r) {
 
   int m = (l + r) / 2;
 
+
   return Matrix::matrix_mult(query(a, b, 2 * p, l, m),
-                             query(a, b, 2 * p + 1, m + 1, r));
+                                      query(a, b, 2 * p + 1, m + 1, r));
+
 }
 
 Matrix *Segtree::update(int i, Matrix *matrix, int p, int l, int r) {

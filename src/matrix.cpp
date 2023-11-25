@@ -19,6 +19,27 @@ Matrix::Matrix(int rows, int cols) {
 
 Matrix::~Matrix() { delete[] this->data; }
 
+Matrix *Matrix::mult(Matrix &b) {
+  Matrix *c = new Matrix(this->rows, b.cols);
+
+  for (int i = 0; i < c->rows * c->cols; i++) {
+    c->data[i] = 0;
+  }
+
+  matrix_type delimiter = 1e8;
+
+  for (int i = 0; i < this->rows; i++) {
+    for (int j = 0; j < b.cols; j++) {
+      for (int k = 0; k < this->cols; k++) {
+        (*c)(i, j) += (*this)(i, k) * (b)(k, j);
+      }
+      (*c)(i, j) %= delimiter;
+    }
+  }
+
+  return c;
+}
+
 Matrix *Matrix::matrix_mult(Matrix *a, Matrix *b) {
   Matrix *c = new Matrix(a->rows, b->cols);
 
