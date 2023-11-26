@@ -1,19 +1,10 @@
-#include "../include/matrix.h"
+#include "matrix.h"
 
 Matrix::Matrix(int rows, int cols) {
   this->cols = cols;
   this->rows = rows;
-  this->hasChanged = false;
 
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      if (i == j) {
-        (*this)(i, j) = 1;
-      } else {
-        (*this)(i, j) = 0;
-      }
-    }
-  }
+  this->set_identity();
 }
 
 Matrix::~Matrix() {}
@@ -29,6 +20,7 @@ void Matrix::set_identity() {
     }
   }
 }
+
 Matrix Matrix::matrix_mult(const Matrix &a, const Matrix &b) {
   Matrix c;
 
@@ -51,6 +43,7 @@ Matrix Matrix::matrix_mult(const Matrix &a, const Matrix &b) {
 }
 
 Point Matrix::linear_transformation(Point point) {
+  // Aplicando a transformação linear ao ponto
   return {((*this)(0, 0) * point.x) + ((*this)(0, 1) * point.y),
           ((*this)(1, 0) * point.x) + ((*this)(1, 1) * point.y)};
 }
